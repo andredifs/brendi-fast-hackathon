@@ -1,19 +1,29 @@
 {
-  "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "outDir": "lib",
-    "sourceMap": true,
-    "strict": true,
-    "target": "ES2021",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
-  },
-  "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+    "compilerOptions": {
+        "target": "ES2021",
+        "module": "CommonJS",
+        "rootDirs": [
+            "./src",
+        ],
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "allowJs": false,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "removeComments": true,
+        "isolatedModules": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "skipLibCheck": true
+    },
+    "compileOnSave": true,
+    "include": [
+        "src",
+    ],
+    "exclude": [
+        "**/node_modules/**"
+    ]
 }

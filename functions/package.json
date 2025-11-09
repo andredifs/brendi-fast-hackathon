@@ -17,7 +17,7 @@
     "engines": {
         "node": "20"
     },
-    "main": "lib/index.js",
+    "main": "dist/index.js",
     "dependencies": {
         "@google-cloud/pubsub": "^5.2.0",
         "@types/cors": "^2.8.19",
