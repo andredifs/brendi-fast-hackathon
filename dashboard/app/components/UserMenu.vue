@@ -12,9 +12,9 @@ const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
 
 const user = ref({
-  name: 'Benjamin Canac',
+  name: 'Bambinella Pizzaria',
   avatar: {
-    src: 'https://github.com/benjamincanac.png',
+    src: 'https://firebasestorage.googleapis.com/v0/b/brendi-app.appspot.com/o/public%2Fstores%2F0WcZ1MWEaFc1VftEBdLa%2Fimages%2Flogos%2F0WcZ1MWEaFc1VftEBdLa.jpeg?alt=media&token=59b3e0bd-f8b7-4bad-a158-06092b0c12aa',
     alt: 'Benjamin Canac'
   }
 })
