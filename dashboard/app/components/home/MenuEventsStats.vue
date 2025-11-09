@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { eventsApi } from '~/utils/api-client'
 import type { Period, Range } from '~/types'
 
 interface MenuEvent {
@@ -11,59 +10,43 @@ interface MenuEvent {
   metadata: string;
 }
 
-interface EventStats {
-  title: string;
-  icon: string;
-  value: number | string;
-}
-
 const props = defineProps<{
+  events: MenuEvent[]
   period: Period
   range: Range
 }>()
 
-const { data: stats, pending } = await useAsyncData<EventStats[]>('menu-events-stats', async () => {
-  try {
-    // For now, we'll fetch all events without date filtering
-    const events = await eventsApi.list({
-      storeId: '0WcZ1MWEaFc1VftEBdLa'
-    }) as MenuEvent[];
+// Calculate stats from events
+const stats = computed(() => {
+  const events = props.events || []
+  
+  const pageViews = events.filter(e => e.event_type === 'pageView').length
+  const productViews = events.filter(e => e.event_type === 'productView').length
+  const addToCarts = events.filter(e => e.event_type === 'addToCart').length
+  const purchases = events.filter(e => e.event_type === 'purchase').length
 
-    // Calculate stats
-    const pageViews = events.filter(e => e.event_type === 'pageView').length;
-    const productViews = events.filter(e => e.event_type === 'productView').length;
-    const addToCarts = events.filter(e => e.event_type === 'addToCart').length;
-    const purchases = events.filter(e => e.event_type === 'purchase').length;
-
-    return [
-      {
-        title: 'Visualizações',
-        icon: 'i-lucide-eye',
-        value: pageViews
-      },
-      {
-        title: 'Produtos Vistos',
-        icon: 'i-lucide-search',
-        value: productViews
-      },
-      {
-        title: 'Adicionados ao Carrinho',
-        icon: 'i-lucide-shopping-cart',
-        value: addToCarts
-      },
-      {
-        title: 'Compras',
-        icon: 'i-lucide-check-circle',
-        value: purchases
-      }
-    ];
-  } catch (error) {
-    console.error('Error fetching menu events stats:', error);
-    return [];
-  }
-}, {
-  watch: [() => props.period, () => props.range],
-  default: () => []
+  return [
+    {
+      title: 'Visualizações',
+      icon: 'i-lucide-eye',
+      value: pageViews
+    },
+    {
+      title: 'Produtos Vistos',
+      icon: 'i-lucide-search',
+      value: productViews
+    },
+    {
+      title: 'Adicionados ao Carrinho',
+      icon: 'i-lucide-shopping-cart',
+      value: addToCarts
+    },
+    {
+      title: 'Compras',
+      icon: 'i-lucide-check-circle',
+      value: purchases
+    }
+  ]
 })
 </script>
 
@@ -89,10 +72,6 @@ const { data: stats, pending } = await useAsyncData<EventStats[]>('menu-events-s
         </span>
       </div>
     </UPageCard>
-    
-    <div v-if="pending" class="col-span-4 text-center py-4">
-      <USkeleton class="h-20 w-full" />
-    </div>
   </UPageGrid>
 </template>
 

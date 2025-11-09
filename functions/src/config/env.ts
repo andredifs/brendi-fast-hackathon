@@ -46,7 +46,7 @@ export const ZAPI_CLIENT_TOKEN = defineSecret('ZAPI_CLIENT_TOKEN');
  * Default: Firebase Functions URL in us-central1
  */
 export const EVENTS_API_URL = defineString('EVENTS_API_URL', {
-    default: 'http://localhost:5001/brendi-fast-hackathon/us-central1/events',
+    default: 'http://127.0.0.1:5001/fast-hackathon-andre/us-central1/events-api',
     description: 'URL for the Events API endpoint',
 });
 

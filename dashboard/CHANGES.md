@@ -55,7 +55,7 @@ Shows a table of the 50 most recent events with:
 Make sure to set in your `.env` file:
 
 ```bash
-EVENTS_API_URL=http://localhost:5001/brendi-fast-hackathon/us-central1/events
+EVENTS_API_URL=http://127.0.0.1:5001/fast-hackathon-andre/us-central1/events-api
 ```
 
 Or for production, use your deployed Cloud Functions URL.

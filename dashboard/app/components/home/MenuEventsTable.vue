@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { eventsApi } from '~/utils/api-client'
 import type { Period, Range } from '~/types'
 
 interface MenuEvent {
   id: string;
-  created_at: string;
+  created_at: any;
   event_type: string;
   device_type: string;
   platform: string;
-  metadata: string;
+  metadata?: any;
+  created_at_formatted?: string;
 }
 
 const props = defineProps<{
+  events: MenuEvent[]
   period: Period
   range: Range
 }>()
@@ -22,7 +23,7 @@ const eventTypeLabels: Record<string, string> = {
   addToCart: 'Adicionar ao Carrinho',
   checkoutStart: 'Início do Checkout',
   purchase: 'Compra'
-};
+}
 
 const eventTypeColors: Record<string, string> = {
   pageView: 'gray',
@@ -30,81 +31,51 @@ const eventTypeColors: Record<string, string> = {
   addToCart: 'amber',
   checkoutStart: 'orange',
   purchase: 'green'
-};
+}
 
-const { data: events, pending } = await useAsyncData<MenuEvent[]>('menu-events-table', async () => {
-  try {
-    const allEvents = await eventsApi.list({
-      storeId: '0WcZ1MWEaFc1VftEBdLa'
-    }) as MenuEvent[];
-
-    // Return only the last 50 events
-    return allEvents.slice(0, 50);
-  } catch (error) {
-    console.error('Error fetching menu events:', error);
-    
-    // Return mock data if API fails (for development)
-    return [
-      {
-        id: '1',
-        created_at: '09/11/2025, 16:30',
-        event_type: 'purchase',
-        device_type: 'mobile',
-        platform: 'ios',
-        metadata: '{"total": 13200}'
-      },
-      {
-        id: '2',
-        created_at: '09/11/2025, 16:28',
-        event_type: 'checkoutStart',
-        device_type: 'mobile',
-        platform: 'android',
-        metadata: '{"cart_total": 11700}'
-      },
-      {
-        id: '3',
-        created_at: '09/11/2025, 16:25',
-        event_type: 'addToCart',
-        device_type: 'desktop',
-        platform: 'web',
-        metadata: '{"product_name": "Pizza Grande"}'
-      },
-      {
-        id: '4',
-        created_at: '09/11/2025, 16:20',
-        event_type: 'productView',
-        device_type: 'mobile',
-        platform: 'ios',
-        metadata: '{"product_name": "Pizza Super Gigante"}'
-      },
-      {
-        id: '5',
-        created_at: '09/11/2025, 16:15',
-        event_type: 'pageView',
-        device_type: 'mobile',
-        platform: 'android',
-        metadata: '{}'
-      }
-    ] as MenuEvent[];
-  }
-}, {
-  watch: [() => props.period, () => props.range],
-  default: () => []
+// Get last 50 events
+const displayEvents = computed(() => {
+  return (props.events || []).slice(0, 50).map(event => ({
+    ...event,
+    // Formata a data se vier como timestamp
+    created_at_formatted: event.created_at?._seconds
+      ? new Date(event.created_at._seconds * 1000).toLocaleString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      : event.created_at
+  }))
 })
 
-const columns = [{
-  key: 'event_type',
-  label: 'Tipo de Evento'
-}, {
-  key: 'device_type',
-  label: 'Dispositivo'
-}, {
-  key: 'platform',
-  label: 'Plataforma'
-}, {
-  key: 'created_at',
-  label: 'Data'
-}];
+const columns = [
+  {
+    id: 'event_type',
+    key: 'event_type',
+    label: 'Tipo de Evento',
+    sortable: false
+  },
+  {
+    id: 'device_type',
+    key: 'device_type',
+    label: 'Dispositivo',
+    sortable: false
+  },
+  {
+    id: 'platform',
+    key: 'platform',
+    label: 'Plataforma',
+    sortable: false
+  },
+  {
+    id: 'created_at',
+    key: 'created_at',
+    label: 'Data',
+    sortable: false
+  }
+]
 </script>
 
 <template>
@@ -124,28 +95,27 @@ const columns = [{
 
     <UTable
       :columns="columns"
-      :rows="events"
-      :loading="pending"
+      :rows="displayEvents"
     >
       <template #event_type-data="{ row }">
         <UBadge
-          :color="eventTypeColors[row.event_type] || 'gray'"
+          :color="(eventTypeColors[(row as any).event_type] as any) || 'gray'"
           variant="subtle"
         >
-          {{ eventTypeLabels[row.event_type] || row.event_type }}
+          {{ eventTypeLabels[(row as any).event_type] || (row as any).event_type }}
         </UBadge>
       </template>
 
       <template #device_type-data="{ row }">
-        <span class="capitalize">{{ row.device_type }}</span>
+        <span class="capitalize">{{ (row as any).device_type }}</span>
       </template>
 
       <template #platform-data="{ row }">
-        <span class="capitalize">{{ row.platform }}</span>
+        <span class="capitalize">{{ (row as any).platform }}</span>
       </template>
 
       <template #created_at-data="{ row }">
-        <span class="text-sm text-muted">{{ row.created_at }}</span>
+        <span class="text-sm text-muted">{{ (row as any).created_at_formatted || (row as any).created_at }}</span>
       </template>
     </UTable>
   </UCard>
