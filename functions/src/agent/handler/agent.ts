@@ -1,5 +1,5 @@
 import { generateText } from 'ai';
-import { getModel, systemPrompt, agentConfig } from './config';
+import { getModel, buildSystemPrompt, agentConfig } from './config';
 import { logger } from 'firebase-functions/v2';
 
 /**
@@ -15,25 +15,27 @@ interface Message {
  */
 interface AgentResponse {
     text: string;
-    toolCalls?: any[];
     finishReason: string;
 }
 
 /**
- * Processa uma mensagem usando o agent com loop de ferramentas
+ * Processa uma mensagem usando o agent
  *
  * @param userMessage - Mensagem do usuário
  * @param conversationHistory - Histórico de conversas anteriores (opcional)
+ * @param menuEventsContext - Contexto de eventos do menu (opcional)
  * @returns Resposta do agent
  */
 export async function processWithAgent(
     userMessage: string,
-    conversationHistory: Message[] = []
+    conversationHistory: Message[] = [],
+    menuEventsContext?: string
 ): Promise<AgentResponse> {
     try {
         logger.info('Starting agent processing', {
             userMessage,
             historyLength: conversationHistory.length,
+            hasMenuEventsContext: Boolean(menuEventsContext),
         });
 
         // Prepara o histórico de mensagens
@@ -45,7 +47,10 @@ export async function processWithAgent(
             },
         ];
 
-        // Gera resposta usando o agent com tools
+        // Gera o system prompt com contexto se disponível
+        const systemPrompt = buildSystemPrompt(menuEventsContext);
+
+        // Gera resposta usando o agent
         const result = await generateText({
             model: getModel(),
             system: systemPrompt,
@@ -55,13 +60,11 @@ export async function processWithAgent(
 
         logger.info('Agent processing completed', {
             finishReason: result.finishReason,
-            toolCallsCount: result.toolCalls?.length || 0,
-            steps: result.steps?.length || 0,
+            responseLength: result.text.length,
         });
 
         return {
             text: result.text,
-            toolCalls: result.toolCalls,
             finishReason: result.finishReason,
         };
     } catch (error) {

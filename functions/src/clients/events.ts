@@ -37,11 +37,11 @@ const EventsClient = {
             type: params.type,
         });
         try {
-        const response = await axios.post(`${getBaseUrl()}/events`, params);
+            const response = await axios.post(`${getBaseUrl()}/events`, params);
             logger.info('EventsClient: Event created', {
                 eventId: response.data.data?.id,
             });
-        return response.data.data;
+            return response.data.data;
         } catch (error) {
             logger.error('EventsClient: Error creating event', {
                 error: error instanceof Error ? error.message : 'Unknown error',
@@ -59,11 +59,11 @@ const EventsClient = {
             eventId: id,
         });
         try {
-        const response = await axios.get(`${getBaseUrl()}/events/${id}`);
+            const response = await axios.get(`${getBaseUrl()}/events/${id}`);
             logger.info('EventsClient: Event retrieved', {
                 eventId: id,
             });
-        return response.data.data;
+            return response.data.data;
         } catch (error) {
             logger.error('EventsClient: Error getting event', {
                 eventId: id,
@@ -82,11 +82,11 @@ const EventsClient = {
             filters: params,
         });
         try {
-        const response = await axios.get(`${getBaseUrl()}/events`, { params });
+            const response = await axios.get(`${getBaseUrl()}/events`, { params });
             logger.info('EventsClient: Events listed', {
                 count: response.data.data?.length || 0,
             });
-        return response.data.data;
+            return response.data.data;
         } catch (error) {
             logger.error('EventsClient: Error listing events', {
                 error: error instanceof Error ? error.message : 'Unknown error',
@@ -105,11 +105,11 @@ const EventsClient = {
             updateFields: Object.keys(params),
         });
         try {
-        const response = await axios.put(`${getBaseUrl()}/events/${id}`, params);
+            const response = await axios.put(`${getBaseUrl()}/events/${id}`, params);
             logger.info('EventsClient: Event updated', {
                 eventId: id,
             });
-        return response.data.data;
+            return response.data.data;
         } catch (error) {
             logger.error('EventsClient: Error updating event', {
                 eventId: id,
@@ -128,11 +128,11 @@ const EventsClient = {
             eventId: id,
         });
         try {
-        const response = await axios.delete(`${getBaseUrl()}/events/${id}`);
+            const response = await axios.delete(`${getBaseUrl()}/events/${id}`);
             logger.info('EventsClient: Event deleted', {
                 eventId: id,
             });
-        return response.data.data;
+            return response.data.data;
         } catch (error) {
             logger.error('EventsClient: Error deleting event', {
                 eventId: id,

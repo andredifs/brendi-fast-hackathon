@@ -6,7 +6,7 @@ import { logger } from 'firebase-functions/v2';
 async function sendMessage(req: Request, res: Response) {
     logger.info('Sending message', {
         phone: req.body.phone,
-        hasMessage: !!req.body.message,
+        hasMessage: Boolean(req.body.message),
     });
 
     const parsedBody = Validators.sendMessage.safeParse(req.body);
@@ -47,7 +47,7 @@ async function webhook(req: Request, res: Response) {
     logger.info('Webhook received', {
         messageId: req.body.messageId,
         phone: req.body.phone,
-        hasData: !!req.body,
+        hasData: Boolean(req.body),
     });
 
     // const parsedBody = Validators.webhook.safeParse(req.body);

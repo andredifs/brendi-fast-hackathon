@@ -1,6 +1,26 @@
 import axios from 'axios';
-import { getZApiUrl, getZApiConfig } from '../config/zapi';
+import { ZAPI_INSTANCE, ZAPI_TOKEN, ZAPI_CLIENT_TOKEN } from '../config/env';
 import { logger } from 'firebase-functions/v2';
+
+/**
+ * Configuração do Z-API
+ */
+function getZApiConfig() {
+    return {
+        instance: ZAPI_INSTANCE.value(),
+        token: ZAPI_TOKEN.value(),
+        clientToken: ZAPI_CLIENT_TOKEN.value(),
+        baseUrl: 'https://api.z-api.io',
+    };
+}
+
+/**
+ * Gera a URL completa para um endpoint do Z-API
+ */
+function getZApiUrl(endpoint: string): string {
+    const config = getZApiConfig();
+    return `${config.baseUrl}/instances/${config.instance}/token/${config.token}/${endpoint}`;
+}
 
 interface SendTextMessageParams {
     phone: string;
@@ -14,9 +34,15 @@ interface SendTextMessageResponse {
     messageId: string;
 }
 
-class ZApiClient {
-    async sendTextMessage(params: SendTextMessageParams): Promise<SendTextMessageResponse> {
-        logger.info('ZApiClient: Sending text message', {
+/**
+ * Client para enviar mensagens via WhatsApp usando Z-API
+ */
+const MessagingClient = {
+    /**
+     * Envia uma mensagem de texto via WhatsApp
+     */
+    sendTextMessage: async (params: SendTextMessageParams): Promise<SendTextMessageResponse> => {
+        logger.info('MessagingClient: Sending text message', {
             phone: params.phone,
             messageLength: params.message.length,
             delayMessage: params.delayMessage,
@@ -27,7 +53,7 @@ class ZApiClient {
             const config = getZApiConfig();
             const url = getZApiUrl('send-text');
 
-            logger.info('ZApiClient: Making request to Z-API', {
+            logger.info('MessagingClient: Making request to Z-API', {
                 url,
                 hasClientToken: Boolean(config.clientToken),
             });
@@ -48,31 +74,35 @@ class ZApiClient {
                 }
             );
 
-            logger.info('ZApiClient: Message sent successfully', {
+            logger.info('MessagingClient: Message sent successfully', {
                 zaapId: response.data.zaapId,
                 messageId: response.data.messageId,
+                phone: params.phone,
             });
 
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                logger.error('ZApiClient: Axios error sending message', {
+                logger.error('MessagingClient: Axios error sending message', {
                     status: error.response?.status,
                     statusText: error.response?.statusText,
                     data: error.response?.data,
                     message: error.message,
+                    phone: params.phone,
                 });
                 throw new Error(
                     `Z-API Error: ${error.response?.data?.message || error.message}`
                 );
             }
-            logger.error('ZApiClient: Unknown error sending message', {
+            logger.error('MessagingClient: Unknown error sending message', {
                 error: error instanceof Error ? error.message : 'Unknown error',
                 stack: error instanceof Error ? error.stack : undefined,
+                phone: params.phone,
             });
             throw error;
         }
-    }
-}
+    },
+};
 
-export default new ZApiClient();
+export default MessagingClient;
+
