@@ -52,13 +52,18 @@ Shows a table of the 50 most recent events with:
 
 ## Environment Variables
 
-Make sure to set in your `.env` file:
+Make sure to set in your `.env` file for local development:
 
 ```bash
 EVENTS_API_URL=http://127.0.0.1:5001/fast-hackathon-andre/us-central1/events-api
 ```
 
-Or for production, use your deployed Cloud Functions URL.
+For production, the fallback URL is already configured to use the Cloud Functions URL:
+```bash
+https://us-central1-fast-hackathon-andre.cloudfunctions.net/events-api
+```
+
+You can override this by setting the `EVENTS_API_URL` environment variable in your deployment.
 
 ## Next Steps
 

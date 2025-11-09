@@ -1,6 +1,6 @@
 export default eventHandler(async (event) => {
   const id = getRouterParam(event, 'id');
-  const eventsApiUrl = process.env.EVENTS_API_URL || 'http://127.0.0.1:5001/fast-hackathon-andre/us-central1/events-api';
+  const eventsApiUrl = process.env.EVENTS_API_URL || 'https://us-central1-fast-hackathon-andre.cloudfunctions.net/events-api';
 
   try {
     const response = await $fetch(`${eventsApiUrl}/events/${id}`);
