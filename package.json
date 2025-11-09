@@ -1,0 +1,31 @@
+{
+  "name": "brendi-fast-hackathon",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo Firebase: Dashboard (Nuxt) + Functions",
+  "scripts": {
+    "dev": "npm run dev --prefix dashboard",
+    "dev:functions": "npm run serve --prefix functions",
+    "build": "npm run build --prefix dashboard",
+    "build:functions": "npm run build --workspace=functions",
+    "build:all": "npm run build:functions && npm run build",
+    "install:all": "npm install --prefix dashboard && npm install --prefix functions",
+    "firebase:deploy": "npm run build:all && firebase deploy",
+    "firebase:deploy:hosting": "npm run build --prefix dashboard && firebase deploy --only hosting",
+    "firebase:deploy:functions": "firebase deploy --only functions",
+    "lint": "npm run lint --prefix dashboard && npm run lint --prefix functions",
+    "clean": "rm -rf dashboard/.output dashboard/.nuxt functions/lib node_modules dashboard/node_modules functions/node_modules"
+  },
+  "workspaces": [
+    "dashboard",
+    "functions"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "firebase",
+    "nuxt",
+    "monorepo"
+  ]
+}

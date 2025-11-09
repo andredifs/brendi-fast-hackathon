@@ -1,0 +1,9 @@
+node_modules
+.eslintrc.js
+lib
+dist
+generated
+**/*.mdx
+**/*.yml
+**/*.yaml
+
