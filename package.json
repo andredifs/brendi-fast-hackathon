@@ -4,8 +4,10 @@
     "private": true,
     "description": "Monorepo Firebase: Dashboard (Nuxt) + Functions",
     "scripts": {
+        "kill": "node scripts/developement/kill.js",
         "dev:dashboard": "npm run dev --prefix dashboard",
         "dev:functions": "npm run serve --prefix functions",
+        "firebase": "npm run kill && firebase emulators:start --export-on-exit --import=\".firebase/exports\"",
         "build": "npm run build:functions && npm run build",
         "build:dashboard": "npm run build --prefix dashboard",
         "build:functions": "npm run build --workspace=functions",
@@ -15,6 +17,7 @@
         "firebase:deploy": "npm run build:all && firebase deploy",
         "firebase:deploy:hosting": "npm run build --prefix dashboard && firebase deploy --only hosting",
         "firebase:deploy:functions": "firebase deploy --only functions",
+        "import:feedbacks": "npx ts-node scripts/database/import-feedbacks.ts",
         "lint": "npm run lint --prefix dashboard && npm run lint --prefix functions",
         "lint:dashboard": "npm run lint --prefix dashboard",
         "lint:functions": "npm run lint --prefix functions",
@@ -31,5 +34,8 @@
         "firebase",
         "nuxt",
         "monorepo"
-    ]
+    ],
+    "devDependencies": {
+        "kill-port": "^2.0.1"
+    }
 }

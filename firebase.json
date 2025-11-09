@@ -1,4 +1,15 @@
 {
+    "emulators": {
+        "singleProjectMode": false,
+        "functions": {
+            "port": 5001,
+            "host": "0.0.0.0"
+        },
+        "firestore": {
+            "port": 9093,
+            "host": "0.0.0.0"
+        }
+    },
     "functions": [
         {
             "source": "functions",
