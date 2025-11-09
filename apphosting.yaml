@@ -1,8 +1,0 @@
-runConfig:
-  runtime: nodejs20
-  buildTool: npm
-
-env:
-  - variable: NODE_VERSION
-    value: "20"
-
