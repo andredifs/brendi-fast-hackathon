@@ -12,7 +12,7 @@ const logger = createLogger({
     scriptName: "import-menu-events",
 });
 
-const __DEV__ = true;
+const __DEV__ = false;
 
 if (__DEV__) {
     // app emulator config
