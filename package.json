@@ -17,7 +17,7 @@
         "firebase:deploy": "npm run build:all && firebase deploy",
         "firebase:deploy:hosting": "npm run build --prefix dashboard && firebase deploy --only hosting",
         "firebase:deploy:functions": "firebase deploy --only functions",
-        "import:feedbacks": "npx ts-node scripts/database/import-feedbacks.ts",
+        "import:menu-events": "npx tsx scripts/database/import-menu-events.ts",
         "lint": "npm run lint --prefix dashboard && npm run lint --prefix functions",
         "lint:dashboard": "npm run lint --prefix dashboard",
         "lint:functions": "npm run lint --prefix functions",
