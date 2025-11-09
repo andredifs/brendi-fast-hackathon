@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import handler from './handler';
 
 /**
  * Cloud Function triggered por mensagens do WhatsApp via PubSub
@@ -6,4 +7,4 @@ import * as functions from 'firebase-functions';
  */
 export const processMessage = functions.pubsub
     .topic('whatsapp-messages')
-    .onPublish(msg => import('./handler').then(m => m.default(msg)));
+    .onPublish(handler);
