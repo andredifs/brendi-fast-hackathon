@@ -9,7 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 // Initialize logger
 const logger = createLogger({
-    scriptName: "import-feedbacks",
+    scriptName: "import-menu-events",
 });
 
 const __DEV__ = true;
@@ -39,27 +39,38 @@ const firebaseConfig = {
 const app = admin.initializeApp(firebaseConfig);
 const db = app.firestore();
 
-interface Feedback {
+interface MenuEvent {
     id: string;
-    store_consumer_id: string;
-    created_at: {
-        _date: boolean;
-        iso: string;
-    };
-    updated_at: {
-        _date: boolean;
-        iso: string;
-    };
-    category: string;
-    order_id: string;
-    rated_response: string;
-    rating: number;
+    created_at: string;
+    event_type: string;
+    device_type: string;
+    platform: string;
+    referrer: string;
+    session_id: string;
     store_id: string;
+    metadata: string;
+    timestamp: string;
 }
 
-async function importFeedbacks() {
+// Helper function to parse date string
+function parseEventDate(dateString: string): Date {
+    // Format: "DD/MM/YYYY, HH:mm"
+    const [datePart, timePart] = dateString.split(", ");
+    const [day, month, year] = datePart.split("/");
+    const [hours, minutes] = timePart.split(":");
+
+    return new Date(
+        parseInt(year),
+        parseInt(month) - 1, // Month is 0-indexed
+        parseInt(day),
+        parseInt(hours),
+        parseInt(minutes)
+    );
+}
+
+async function importMenuEvents() {
     try {
-        logger.log("📚 Starting feedbacks import...");
+        logger.log("📚 Starting menu events import...");
 
         // Validate configuration
         if (!firebaseConfig.projectId) {
@@ -68,14 +79,14 @@ async function importFeedbacks() {
             process.exit(1);
         }
 
-        // Read feedbacks.json
-        const feedbacksPath = path.resolve(__dirname, "../data/feedbacks.json");
-        logger.info(`Reading feedbacks from: ${feedbacksPath}`);
+        // Read menu_events_last_30_days.json
+        const menuEventsPath = path.resolve(__dirname, "../data/menu_events_last_30_days.json");
+        logger.info(`Reading menu events from: ${menuEventsPath}`);
 
-        const feedbacksData = fs.readFileSync(feedbacksPath, "utf-8");
-        const feedbacks: Feedback[] = JSON.parse(feedbacksData);
+        const menuEventsData = fs.readFileSync(menuEventsPath, "utf-8");
+        const menuEvents: MenuEvent[] = JSON.parse(menuEventsData);
 
-        logger.log(`📊 Found ${feedbacks.length} feedbacks to import`);
+        logger.log(`📊 Found ${menuEvents.length} menu events to import`);
 
         // Batch write for better performance
         const batchSize = 500; // Firestore batch limit is 500
@@ -83,14 +94,15 @@ async function importFeedbacks() {
         let count = 0;
         let totalImported = 0;
 
-        for (const feedback of feedbacks) {
-            const docRef = db.collection("feedbacks").doc(feedback.id);
+        for (const event of menuEvents) {
+            const docRef = db.collection("menu_events").doc(event.id);
 
-            // Convert dates
+            // Parse dates and metadata
             const data = {
-                ...feedback,
-                created_at: new Date(feedback.created_at.iso),
-                updated_at: new Date(feedback.updated_at.iso)
+                ...event,
+                created_at: parseEventDate(event.created_at),
+                timestamp: parseEventDate(event.timestamp),
+                metadata: event.metadata ? JSON.parse(event.metadata) : {}
             };
 
             batch.set(docRef, data);
@@ -100,7 +112,7 @@ async function importFeedbacks() {
             // Commit batch when it reaches the limit
             if (count === batchSize) {
                 await batch.commit();
-                logger.log(`✅ Imported ${totalImported} / ${feedbacks.length} feedbacks...`);
+                logger.log(`✅ Imported ${totalImported} / ${menuEvents.length} menu events...`);
                 batch = db.batch();
                 count = 0;
             }
@@ -109,18 +121,18 @@ async function importFeedbacks() {
         // Commit remaining items
         if (count > 0) {
             await batch.commit();
-            logger.log(`✅ Imported ${totalImported} / ${feedbacks.length} feedbacks...`);
+            logger.log(`✅ Imported ${totalImported} / ${menuEvents.length} menu events...`);
         }
 
-        logger.log(`🎉 Successfully imported ${totalImported} feedbacks!`);
+        logger.log(`🎉 Successfully imported ${totalImported} menu events!`);
         logger.close();
         process.exit(0);
     } catch (error) {
-        logger.error(`❌ Error importing feedbacks: ${error}`);
+        logger.error(`❌ Error importing menu events: ${error}`);
         logger.close();
         process.exit(1);
     }
 }
 
 // Run import
-importFeedbacks();
+importMenuEvents();
