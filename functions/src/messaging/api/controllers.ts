@@ -26,14 +26,14 @@ async function sendMessage(req: Request, res: Response) {
 }
 
 async function webhook(req: Request, res: Response) {
-    const parsedBody = Validators.webhook.safeParse(req.body);
+    // const parsedBody = Validators.webhook.safeParse(req.body);
 
-    if (!parsedBody.success) {
-        return res.status(422).json({ error: parsedBody.error.errors });
-    }
+    // if (!parsedBody.success) {
+    //     return res.status(422).json({ error: parsedBody.error.errors });
+    // }
 
     try {
-        await Services.webhook(parsedBody.data);
+        await Services.webhook(req.body);
 
         return res.status(200).json({
             success: true,
