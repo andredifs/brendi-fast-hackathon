@@ -1,6 +1,5 @@
 import { generateText } from 'ai';
 import { model, systemPrompt, agentConfig } from './config';
-import { tools } from './tools';
 import * as functions from 'firebase-functions';
 
 /**
@@ -51,7 +50,6 @@ export async function processWithAgent(
             model,
             system: systemPrompt,
             messages,
-            tools,
             temperature: agentConfig.temperature,
         });
 
@@ -60,16 +58,6 @@ export async function processWithAgent(
             toolCallsCount: result.toolCalls?.length || 0,
             steps: result.steps?.length || 0,
         });
-
-        // Log das tool calls realizadas (se houver)
-        if (result.toolCalls && result.toolCalls.length > 0) {
-            functions.logger.info('Tool calls executed', {
-                toolCalls: result.toolCalls.map((tc) => ({
-                    toolName: tc.toolName,
-                    args: tc.input,
-                })),
-            });
-        }
 
         return {
             text: result.text,
