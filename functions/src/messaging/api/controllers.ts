@@ -1,18 +1,32 @@
 import Validators from './validators';
 import Services from './services';
+import { Request, Response } from 'express';
 
 async function sendMessage(req: Request, res: Response) {
     const parsedBody = Validators.sendMessage.safeParse(req.body);
 
     if (!parsedBody.success) {
-        return res.status(422).json({ error: parsedBody.error.message });
+        return res.status(422).json({ error: parsedBody.error.errors });
     }
 
     try {
-        const message =
+        const result = await Services.sendMessage(parsedBody.data);
 
-        return res.status(200).json({ message });
+        return res.status(200).json({
+            success: true,
+            data: result,
+        });
     } catch (error) {
-        return res.status(500).json({ error: 'Internal server error' });
+        const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+        return res.status(500).json({
+            success: false,
+            error: errorMessage,
+        });
     }
 }
+
+const Controller = {
+    sendMessage,
+};
+
+export default Controller;
