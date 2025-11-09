@@ -52,28 +52,29 @@ const displayEvents = computed(() => {
 
 const columns = [
   {
-    id: 'event_type',
-    key: 'event_type',
-    label: 'Tipo de Evento',
-    sortable: false
+    accessorKey: 'event_type',
+    header: 'Tipo de Evento',
+    cell: ({ row }: any) => {
+      const type = row.original.event_type
+      return eventTypeLabels[type] || type
+    }
   },
   {
-    id: 'device_type',
-    key: 'device_type',
-    label: 'Dispositivo',
-    sortable: false
+    accessorKey: 'device_type',
+    header: 'Dispositivo',
+    cell: ({ row }: any) => row.original.device_type
   },
   {
-    id: 'platform',
-    key: 'platform',
-    label: 'Plataforma',
-    sortable: false
+    accessorKey: 'platform',
+    header: 'Plataforma',
+    cell: ({ row }: any) => row.original.platform
   },
   {
-    id: 'created_at',
-    key: 'created_at',
-    label: 'Data',
-    sortable: false
+    accessorKey: 'created_at',
+    header: 'Data',
+    cell: ({ row }: any) => {
+      return row.original.created_at_formatted || String(row.original.created_at || '')
+    }
   }
 ]
 </script>
@@ -94,28 +95,13 @@ const columns = [
     </template>
 
     <UTable
+      :data="displayEvents"
       :columns="columns"
-      :rows="displayEvents"
     >
-      <template #event_type-data="{ row }">
-        <UBadge
-          :color="(eventTypeColors[(row as any).event_type] as any) || 'gray'"
-          variant="subtle"
-        >
-          {{ eventTypeLabels[(row as any).event_type] || (row as any).event_type }}
-        </UBadge>
-      </template>
-
-      <template #device_type-data="{ row }">
-        <span class="capitalize">{{ (row as any).device_type }}</span>
-      </template>
-
-      <template #platform-data="{ row }">
-        <span class="capitalize">{{ (row as any).platform }}</span>
-      </template>
-
-      <template #created_at-data="{ row }">
-        <span class="text-sm text-muted">{{ (row as any).created_at_formatted || (row as any).created_at }}</span>
+      <template #empty-state>
+        <div class="flex flex-col items-center justify-center py-12 gap-3">
+          <span class="text-sm text-gray-500">Nenhum evento encontrado</span>
+        </div>
       </template>
     </UTable>
   </UCard>
