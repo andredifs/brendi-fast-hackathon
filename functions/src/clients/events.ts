@@ -1,6 +1,9 @@
 import axios from 'axios';
+import { EVENTS_API_URL } from '../config/env';
 
-const BASE_URL = process.env.EVENTS_API_URL || 'http://localhost:5001/brendi-fast-hackathon/us-central1/events';
+function getBaseUrl(): string {
+    return EVENTS_API_URL.value();
+}
 
 interface CreateEventParams {
     title: string;
@@ -28,7 +31,7 @@ const EventsClient = {
      * Cria um novo evento
      */
     create: async (params: CreateEventParams) => {
-        const response = await axios.post(`${BASE_URL}/events`, params);
+        const response = await axios.post(`${getBaseUrl()}/events`, params);
         return response.data.data;
     },
 
@@ -36,7 +39,7 @@ const EventsClient = {
      * Busca um evento por ID
      */
     get: async (id: string) => {
-        const response = await axios.get(`${BASE_URL}/events/${id}`);
+        const response = await axios.get(`${getBaseUrl()}/events/${id}`);
         return response.data.data;
     },
 
@@ -44,7 +47,7 @@ const EventsClient = {
      * Lista eventos com filtros opcionais
      */
     list: async (params: ListEventsParams = {}) => {
-        const response = await axios.get(`${BASE_URL}/events`, { params });
+        const response = await axios.get(`${getBaseUrl()}/events`, { params });
         return response.data.data;
     },
 
@@ -52,7 +55,7 @@ const EventsClient = {
      * Atualiza um evento existente
      */
     update: async (id: string, params: UpdateEventParams) => {
-        const response = await axios.put(`${BASE_URL}/events/${id}`, params);
+        const response = await axios.put(`${getBaseUrl()}/events/${id}`, params);
         return response.data.data;
     },
 
@@ -60,7 +63,7 @@ const EventsClient = {
      * Deleta um evento
      */
     delete: async (id: string) => {
-        const response = await axios.delete(`${BASE_URL}/events/${id}`);
+        const response = await axios.delete(`${getBaseUrl()}/events/${id}`);
         return response.data.data;
     },
 };

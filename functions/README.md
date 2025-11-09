@@ -2,6 +2,21 @@
 
 Template de API CRUD usando Firebase Cloud Functions, Express, e Zod com arquitetura em camadas.
 
+## 📋 Pré-requisitos
+
+Antes de começar, você precisa configurar as variáveis de ambiente. **Veja o arquivo [ENV_SETUP.md](./ENV_SETUP.md) para instruções detalhadas.**
+
+### Quick Start - Variáveis de Ambiente
+
+1. Copiar arquivo de exemplo:
+   ```bash
+   cp env.example .env
+   ```
+
+2. Preencher com suas chaves reais no arquivo `.env`
+
+3. Para produção, os secrets serão solicitados durante o deploy
+
 ## 🏗️ Arquitetura
 
 O projeto segue uma arquitetura em camadas para melhor organização e manutenibilidade:
@@ -38,7 +53,13 @@ functions/
 ```bash
 cd functions
 npm install
+
+# Configurar variáveis de ambiente para desenvolvimento local
+cp env.example .env
+# Edite o arquivo .env com suas chaves reais
 ```
+
+⚠️ **Importante**: Não commite o arquivo `.env`. Ele já está no `.gitignore`.
 
 ## 🔧 Desenvolvimento
 
@@ -64,9 +85,27 @@ A API estará disponível em: `http://localhost:5001/<project-id>/<region>/api`
 
 ### Deploy
 
+#### Deploy Simples
+
 ```bash
 npm run deploy
 ```
+
+#### Deploy com Verificação de Secrets (Recomendado)
+
+```bash
+npm run deploy:safe
+```
+
+Este script irá:
+- ✅ Verificar se os secrets estão configurados
+- ✅ Executar lint
+- ✅ Compilar o código
+- ✅ Fazer o deploy
+
+**Primeira vez?** O Firebase CLI vai solicitar os valores dos secrets que não foram configurados.
+
+📖 Para mais informações sobre configuração de variáveis de ambiente, veja [ENV_SETUP.md](./ENV_SETUP.md)
 
 ## 📚 API Endpoints
 

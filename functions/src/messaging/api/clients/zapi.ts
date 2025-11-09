@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from 'axios';
-import { getZApiUrl, ZAPI_CONFIG } from '../config/zapi';
+import axios from 'axios';
+import { getZApiUrl, getZApiConfig } from '../config/zapi';
 
 interface SendTextMessageParams {
     phone: string;
@@ -14,28 +14,24 @@ interface SendTextMessageResponse {
 }
 
 class ZApiClient {
-    private axiosInstance: AxiosInstance;
-
-    constructor() {
-        this.axiosInstance = axios.create({
-            headers: {
-                'Client-Token': ZAPI_CONFIG.clientToken,
-                'Content-Type': 'application/json',
-            },
-        });
-    }
-
     async sendTextMessage(params: SendTextMessageParams): Promise<SendTextMessageResponse> {
         try {
+            const config = getZApiConfig();
             const url = getZApiUrl('send-text');
 
-            const response = await this.axiosInstance.post<SendTextMessageResponse>(
+            const response = await axios.post<SendTextMessageResponse>(
                 url,
                 {
                     phone: params.phone,
                     message: params.message,
                     ...(params.delayMessage && { delayMessage: params.delayMessage }),
                     ...(params.delayTyping && { delayTyping: params.delayTyping }),
+                },
+                {
+                    headers: {
+                        'Client-Token': config.clientToken,
+                        'Content-Type': 'application/json',
+                    },
                 }
             );
 

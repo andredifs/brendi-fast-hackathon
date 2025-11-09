@@ -1,6 +1,6 @@
 import { generateText } from 'ai';
-import { model, systemPrompt, agentConfig } from './config';
-import * as functions from 'firebase-functions';
+import { getModel, systemPrompt, agentConfig } from './config';
+import { logger } from 'firebase-functions/v2';
 
 /**
  * Interface para o histórico de mensagens
@@ -31,7 +31,7 @@ export async function processWithAgent(
     conversationHistory: Message[] = []
 ): Promise<AgentResponse> {
     try {
-        functions.logger.info('Starting agent processing', {
+        logger.info('Starting agent processing', {
             userMessage,
             historyLength: conversationHistory.length,
         });
@@ -47,13 +47,13 @@ export async function processWithAgent(
 
         // Gera resposta usando o agent com tools
         const result = await generateText({
-            model,
+            model: getModel(),
             system: systemPrompt,
             messages,
             temperature: agentConfig.temperature,
         });
 
-        functions.logger.info('Agent processing completed', {
+        logger.info('Agent processing completed', {
             finishReason: result.finishReason,
             toolCallsCount: result.toolCalls?.length || 0,
             steps: result.steps?.length || 0,
@@ -65,7 +65,7 @@ export async function processWithAgent(
             finishReason: result.finishReason,
         };
     } catch (error) {
-        functions.logger.error('Error in agent processing', error);
+        logger.error('Error in agent processing', error);
         throw error;
     }
 }

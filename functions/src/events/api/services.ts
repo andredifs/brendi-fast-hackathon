@@ -72,7 +72,7 @@ async function listEvents(params: ListEventsParams) {
 
     const snapshot = await query.get();
 
-    return snapshot.docs.map((doc) => ({
+    return snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
     }));

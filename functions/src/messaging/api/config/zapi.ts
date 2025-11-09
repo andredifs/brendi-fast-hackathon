@@ -1,10 +1,15 @@
-export const ZAPI_CONFIG = {
-    instance: process.env.ZAPI_INSTANCE || '',
-    token: process.env.ZAPI_TOKEN || '',
-    clientToken: process.env.ZAPI_CLIENT_TOKEN || '',
-    baseUrl: 'https://api.z-api.io',
-};
+import { ZAPI_INSTANCE, ZAPI_TOKEN, ZAPI_CLIENT_TOKEN } from '../../../config/env';
+
+export function getZApiConfig() {
+    return {
+        instance: ZAPI_INSTANCE.value(),
+        token: ZAPI_TOKEN.value(),
+        clientToken: ZAPI_CLIENT_TOKEN.value(),
+        baseUrl: 'https://api.z-api.io',
+    };
+}
 
 export function getZApiUrl(endpoint: string): string {
-    return `${ZAPI_CONFIG.baseUrl}/instances/${ZAPI_CONFIG.instance}/token/${ZAPI_CONFIG.token}/${endpoint}`;
+    const config = getZApiConfig();
+    return `${config.baseUrl}/instances/${config.instance}/token/${config.token}/${endpoint}`;
 }

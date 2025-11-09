@@ -1,9 +1,16 @@
-import { openai } from '@ai-sdk/openai';
+import { createOpenAI } from '@ai-sdk/openai';
+import { OPENAI_API_KEY } from '../../config/env';
 
 /**
  * Configuração do modelo de IA
+ * A API key é obtida das variáveis de ambiente de forma segura
  */
-export const model = openai('gpt-4o-mini');
+export function getModel() {
+    const openai = createOpenAI({
+        apiKey: OPENAI_API_KEY.value(),
+    });
+    return openai('gpt-4o-mini');
+}
 
 /**
  * System prompt do agent
