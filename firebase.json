@@ -30,11 +30,6 @@
                 "npm run lint:functions",
                 "npm run build:functions"
             ]
-        },
-        {
-            "source": "dashboard/.output/server",
-            "codebase": "nuxt-ssr",
-            "runtime": "nodejs20"
         }
     ]
 }
