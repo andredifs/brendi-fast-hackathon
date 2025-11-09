@@ -34,3 +34,5 @@ firebase-debug.*.log
 
 # Data files
 scripts/data
+
+firebase-export-*/
