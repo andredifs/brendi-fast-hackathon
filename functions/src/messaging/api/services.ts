@@ -1,5 +1,8 @@
-import axios from 'axios';
-import { getZApiUrl, ZAPI_CONFIG } from '../config/zapi';
+import { PubSub } from '@google-cloud/pubsub';
+import ZApiClient from './clients/zapi';
+
+const pubsub = new PubSub();
+const TOPIC_NAME = 'whatsapp-messages';
 
 interface SendMessageParams {
     phone: string;
@@ -14,38 +17,27 @@ interface ZApiResponse {
 }
 
 async function sendMessage(params: SendMessageParams): Promise<ZApiResponse> {
-    try {
-        const url = getZApiUrl('send-text');
+    return ZApiClient.sendTextMessage(params);
+}
 
-        const response = await axios.post<ZApiResponse>(
-            url,
-            {
-                phone: params.phone,
-                message: params.message,
-                ...(params.delayMessage && { delayMessage: params.delayMessage }),
-                ...(params.delayTyping && { delayTyping: params.delayTyping }),
-            },
-            {
-                headers: {
-                    'Client-Token': ZAPI_CONFIG.clientToken,
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
+async function webhook(webhookData: any): Promise<void> {
+    const topic = pubsub.topic(TOPIC_NAME);
 
-        return response.data;
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            throw new Error(
-                `Z-API Error: ${error.response?.data?.message || error.message}`
-            );
-        }
-        throw error;
-    }
+    const message = {
+        data: Buffer.from(JSON.stringify(webhookData)),
+        attributes: {
+            messageId: webhookData.messageId || '',
+            phone: webhookData.phone || '',
+            timestamp: Date.now().toString(),
+        },
+    };
+
+    await topic.publishMessage(message);
 }
 
 const Services = {
     sendMessage,
+    webhook,
 };
 
 export default Services;
