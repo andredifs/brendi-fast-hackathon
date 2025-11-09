@@ -12,20 +12,10 @@ COPY nuxt.config.ts ./
 COPY tsconfig.json ./
 
 # Instalar dependências
-RUN npm ci --only=production && npm cache clean --force
+RUN npm i
 
 # Stage de build
-FROM node:20-alpine AS builder
-
-WORKDIR /app
-
-# Copiar package files
-COPY package*.json ./
-COPY nuxt.config.ts ./
-COPY tsconfig.json ./
-
-# Instalar todas as dependências (incluindo dev)
-RUN npm ci && npm cache clean --force
+FROM base AS builder
 
 # Copiar código fonte
 COPY app ./app
@@ -48,6 +38,8 @@ RUN adduser --system --uid 1001 nuxtjs
 COPY --from=builder --chown=nuxtjs:nodejs /app/.output /app/.output
 COPY --from=builder --chown=nuxtjs:nodejs /app/package.json /app/package.json
 
+# Configurar permissões
+RUN chown -R nuxtjs:nodejs /app
 USER nuxtjs
 
 # Configurar variáveis de ambiente

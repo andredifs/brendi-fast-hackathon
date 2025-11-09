@@ -1,15 +1,7 @@
 steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'build'
-      - '-t'
-      - 'gcr.io/${PROJECT_ID}/brendi-fast-hackathon-dashboard:${_ENVIRONMENT}'
-      - '-t'
-      - 'gcr.io/${PROJECT_ID}/brendi-fast-hackathon-dashboard:latest'
-      - '-f'
-      - 'dashboard/deploy/Dockerfile'
-      - './dashboard'
+    args: ['build', '-t', 'gcr.io/${PROJECT_ID}/brendi-fast-hackathon-dashboard:${_ENVIRONMENT}', '-t', 'gcr.io/${PROJECT_ID}/brendi-fast-hackathon-dashboard:latest', '-f', 'dashboard/deploy/Dockerfile', './dashboard']
     dir: '.'
 
   # Push the container image to Container Registry
