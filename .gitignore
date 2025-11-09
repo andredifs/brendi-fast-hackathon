@@ -31,3 +31,6 @@ logs
 firebase-debug.log
 firebase-debug.*.log
 .firebaserc
+
+# Data files
+scripts/data
