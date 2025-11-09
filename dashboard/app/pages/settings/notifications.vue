@@ -44,7 +44,10 @@ async function onChange() {
 </script>
 
 <template>
-  <div v-for="(section, index) in sections" :key="index">
+  <div
+    v-for="(section, index) in sections"
+    :key="index"
+  >
     <UPageCard
       :title="section.title"
       :description="section.description"
@@ -52,7 +55,10 @@ async function onChange() {
       class="mb-4"
     />
 
-    <UPageCard variant="subtle" :ui="{ container: 'divide-y divide-default' }">
+    <UPageCard
+      variant="subtle"
+      :ui="{ container: 'divide-y divide-default' }"
+    >
       <UFormField
         v-for="field in section.fields"
         :key="field.name"

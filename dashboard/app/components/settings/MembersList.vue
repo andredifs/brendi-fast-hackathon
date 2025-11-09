@@ -17,7 +17,10 @@ const items = [{
 </script>
 
 <template>
-  <ul role="list" class="divide-y divide-default">
+  <ul
+    role="list"
+    class="divide-y divide-default"
+  >
     <li
       v-for="(member, index) in members"
       :key="index"
@@ -47,7 +50,10 @@ const items = [{
           :ui="{ value: 'capitalize', item: 'capitalize' }"
         />
 
-        <UDropdownMenu :items="items" :content="{ align: 'end' }">
+        <UDropdownMenu
+          :items="items"
+          :content="{ align: 'end' }"
+        >
           <UButton
             icon="i-lucide-ellipsis-vertical"
             color="neutral"

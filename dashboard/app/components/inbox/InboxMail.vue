@@ -47,7 +47,10 @@ function onSubmit() {
 
 <template>
   <UDashboardPanel id="inbox-2">
-    <UDashboardNavbar :title="mail.subject" :toggle="false">
+    <UDashboardNavbar
+      :title="mail.subject"
+      :toggle="false"
+    >
       <template #leading>
         <UButton
           icon="i-lucide-x"
@@ -68,7 +71,11 @@ function onSubmit() {
         </UTooltip>
 
         <UTooltip text="Reply">
-          <UButton icon="i-lucide-reply" color="neutral" variant="ghost" />
+          <UButton
+            icon="i-lucide-reply"
+            color="neutral"
+            variant="ghost"
+          />
         </UTooltip>
 
         <UDropdownMenu :items="dropdownItems">
@@ -111,9 +118,16 @@ function onSubmit() {
     </div>
 
     <div class="pb-4 px-4 sm:px-6 shrink-0">
-      <UCard variant="subtle" class="mt-auto" :ui="{ header: 'flex items-center gap-1.5 text-dimmed' }">
+      <UCard
+        variant="subtle"
+        class="mt-auto"
+        :ui="{ header: 'flex items-center gap-1.5 text-dimmed' }"
+      >
         <template #header>
-          <UIcon name="i-lucide-reply" class="size-5" />
+          <UIcon
+            name="i-lucide-reply"
+            class="size-5"
+          />
 
           <span class="text-sm truncate">
             Reply to {{ mail.from.name }} ({{ mail.from.email }})

@@ -59,7 +59,10 @@ defineShortcuts({
         ]"
         @click="selectedMail = mail"
       >
-        <div class="flex items-center justify-between" :class="[mail.unread && 'font-semibold']">
+        <div
+          class="flex items-center justify-between"
+          :class="[mail.unread && 'font-semibold']"
+        >
           <div class="flex items-center gap-3">
             {{ mail.from.name }}
 
@@ -68,7 +71,10 @@ defineShortcuts({
 
           <span>{{ isToday(new Date(mail.date)) ? format(new Date(mail.date), 'HH:mm') : format(new Date(mail.date), 'dd MMM') }}</span>
         </div>
-        <p class="truncate" :class="[mail.unread && 'font-semibold']">
+        <p
+          class="truncate"
+          :class="[mail.unread && 'font-semibold']"
+        >
           {{ mail.subject }}
         </p>
         <p class="text-dimmed line-clamp-1">

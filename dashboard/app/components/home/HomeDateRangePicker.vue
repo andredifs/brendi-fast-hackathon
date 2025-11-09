@@ -78,7 +78,10 @@ const selectRange = (range: { days?: number, months?: number, years?: number }) 
 </script>
 
 <template>
-  <UPopover :content="{ align: 'start' }" :modal="true">
+  <UPopover
+    :content="{ align: 'start' }"
+    :modal="true"
+  >
     <UButton
       color="neutral"
       variant="ghost"
@@ -100,7 +103,10 @@ const selectRange = (range: { days?: number, months?: number, years?: number }) 
       </span>
 
       <template #trailing>
-        <UIcon name="i-lucide-chevron-down" class="shrink-0 text-dimmed size-5 group-data-[state=open]:rotate-180 transition-transform duration-200" />
+        <UIcon
+          name="i-lucide-chevron-down"
+          class="shrink-0 text-dimmed size-5 group-data-[state=open]:rotate-180 transition-transform duration-200"
+        />
       </template>
     </UButton>
 

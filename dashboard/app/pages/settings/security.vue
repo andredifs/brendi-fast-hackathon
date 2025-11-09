@@ -53,7 +53,11 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
         />
       </UFormField>
 
-      <UButton label="Update" class="w-fit" type="submit" />
+      <UButton
+        label="Update"
+        class="w-fit"
+        type="submit"
+      />
     </UForm>
   </UPageCard>
 
@@ -63,7 +67,10 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
     class="bg-gradient-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
-      <UButton label="Delete account" color="error" />
+      <UButton
+        label="Delete account"
+        color="error"
+      />
     </template>
   </UPageCard>
 </template>
