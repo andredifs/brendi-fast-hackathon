@@ -4,7 +4,7 @@
     "private": true,
     "description": "Monorepo Firebase: Dashboard (Nuxt) + Functions",
     "scripts": {
-        "kill": "node scripts/developement/kill.js",
+        "kill": "node scripts/development/kill.js",
         "dev:dashboard": "npm run dev --prefix dashboard",
         "dev:functions": "npm run serve --prefix functions",
         "firebase": "npm run kill && firebase emulators:start --export-on-exit --import=\".firebase/exports\"",

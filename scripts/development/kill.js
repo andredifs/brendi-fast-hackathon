@@ -9,6 +9,10 @@ const firebaseConfig = {
         functions: {
             port: 5001,
             host: '0.0.0.0'
+        },
+        pubsub: {
+            port: 9095,
+            host: '0.0.0.0'
         }
     }
 }
